@@ -23,9 +23,9 @@ The goals / steps of this project are the following:
 [image4]: ./output_images/binary_threshold_output.jpg "Binary Output"
 [image5]: ./output_images/corrections-images.jpg "RGB-HSL-HLV"
 [image6]: ./output_images/warped_straight_lines.jpg "Warp Example"
-[image7]: ./output_images/color_fit_lines.jpg "Fit Visual"
+[image7]: ./output_images/hitstagram.jpg "histogram for sliding lane lines"
 [image8]: ./output_images/example_output.jpg "Output"
-[video1]: ./https://youtu.be/u9cmZEouAZ4 "Video"
+[video1]: "https://youtu.be/u9cmZEouAZ4" "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
@@ -87,13 +87,17 @@ To deal with loosing the yellow lane line in the blue channel, I converted the i
 Now you can see that, the S channel is still doing a fairly robust job of picking up the lines under very different color and contrast conditions, while the other selections look messy. You could tweak the thresholds and get closer in the other channels, but the S channel is preferable because it is more robust to changing conditions.
 
 Color and Gradient
-You can clearly see which parts of the lane lines were detected by the gradient threshold and which parts were detected by the color threshold by stacking the channels and seeing the individual components. You can create a binary combination of these two images to map out where either the color or gradient thresholds were met.
+You can clearly see which parts of the lane lines were detected by the gradient threshold and which parts were detected by the color threshold by stacking the channels and seeing the individual components. You can create a binary combination of these two images to map out where either the color or gradient thresholds were met. 
 
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
 The next part of the pipeline is to warp the roadway as if the camera was located from.  To archive this I used `cv2.getPerspectiveTransform`
 to  Calculates a perspective transform from four pairs of the corresponding points. 
+
+I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
+
+![alt text][image6]
 
 ```python
 def unwarp(img, src, dst):
@@ -106,7 +110,7 @@ def unwarp(img, src, dst):
     return warped, M, Minv
 ```
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcore the source and destination points in the following manner:
+The code for my perspective transform includes a function called `unwarp()`, which appears in lines 133 through 140 in the file `lane_line_detection.py`. The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcore and source destination points in the following manner:
 
 ```python
 #Define source and destination points for transform
@@ -122,9 +126,11 @@ dst = np.float32([(450,0),
 exampleImg_unwarp, M, Minv = unwarp(exampleImg_undistort, src, dst)
 ```
 
+These points represent a polynomial where lane lines in the image based on the the the current image coordinate systems. The image shows both the wrapped output and the polygon edges used to make sure the lane lines and the warped image are within tolerance. Those same four source points will now work to transform any image (again, under the assumption that the road is flat and the camera perspective hasn't changed). When applying the transform to new images, the test of whether or not you got the transform correct, is that the lane lines should appear parallel in the warped images, whether they are straight or curved.. I struggled with keeping the lane lines parallel for the curved roads and still want to fine turn the results more to achieve better detection. 
 
+Here's an example of applying a perspective transform to your thresholded binary image, using the same source and destination points as above, showing that the curved lines are (more or less) parallel in the transformed image:
 
-This resulted in the following source and destination points:
+This resulted source and destination points after playing with the input to the code shown above was these points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
@@ -132,13 +138,9 @@ This resulted in the following source and destination points:
 | 707, 464      | w-450, 0      |
 | 258, 684      | 450, 960      |
 | 1049, 684     | w-450, 960    |
-
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
-
-![alt text][image6]
+It's clear more tweaking could be done with these points because the curvy road has times where the left and right lane predictions overlap meaning that these `src` and `dst` parameters are not as parallel as I assumed. 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
-
 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
@@ -160,8 +162,8 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
-![alt text][video1]
+Here's a [link to my video result](https://www.youtube.com/watch?v=u9cmZEouAZ4)
+
 ---
 
 ### Discussion
