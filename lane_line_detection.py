@@ -549,8 +549,6 @@ def sliding_window_polyfit(img):
     # this changes it so that only a quarter of the histogram (directly to the left/right) is considered
     leftx_base = np.argmax(histogram[quarter_point:midpoint]) + quarter_point
     rightx_base = np.argmax(histogram[midpoint:(midpoint+quarter_point)]) + midpoint
-    
-    #print('base pts:', leftx_base, rightx_base)
 
     # Choose the number of sliding windows
     nwindows = 10

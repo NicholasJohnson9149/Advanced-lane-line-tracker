@@ -24,7 +24,9 @@ The goals / steps of this project are the following:
 [image5]: ./output_images/corrections-images.jpg "RGB-HSL-HLV"
 [image6]: ./output_images/warped_straight_lines.jpg "Warp Example"
 [image7]: ./output_images/hitstagram.jpg "histogram for sliding lane lines"
-[image8]: ./output_images/example_output.jpg "Output"
+[image8]: ./output_images/windows-on-lanes.jpg "sliding lane lines"
+[image9]: ./output_images/warped-smoothed-slide.jpg "warped smoothed lane lines"
+[image10]: ./output_images/example_output.jpg "Output"
 [video1]: "https://youtu.be/u9cmZEouAZ4" "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -143,19 +145,23 @@ It's clear more tweaking could be done with these points because the curvy road 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+Section of code for the sliding windows is between lines 538 to 618 on my code `lane_line_detection.py` where I used two polynomials to detect the lane curvature for left and right lanes. Step one for the sliding window fiction is addressing the histogram of the binary image produced in the previous section. The image bellow shows how the lane lines have a higher intensity than the rest of the image allowing for the function to find the curvature of these lines. 
 
 ![alt text][image7]
 
+Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+![alt text][image8]
+![alt text][image9]
+
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+I did this in lines 729 through 751 in my code in `lane_line_detection.py`. You can see how the  slide window template across the image from left to right and any overlapping values are summed together, creating the convolved signal. The peak of the convolved signal is where there was the highest overlap of pixels and the most likely position for the lane marker.
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
-![alt text][image8]
+![alt text][image10]
 
 ---
 
