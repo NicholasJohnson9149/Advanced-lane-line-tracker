@@ -25,7 +25,7 @@ The goals / steps of this project are the following:
 [image6]: ./output_images/warped_straight_lines.jpg "Warp Example"
 [image7]: ./output_images/color_fit_lines.jpg "Fit Visual"
 [image8]: ./output_images/example_output.jpg "Output"
-[video1]: ./challenge_video_output.mp4 "Video"
+[video1]: ./https://youtu.be/u9cmZEouAZ4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
