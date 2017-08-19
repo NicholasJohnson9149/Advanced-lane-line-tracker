@@ -138,6 +138,7 @@ This resulted source and destination points after playing with the input to the 
 | 707, 464      | w-450, 0      |
 | 258, 684      | 450, 960      |
 | 1049, 684     | w-450, 960    |
+
 It's clear more tweaking could be done with these points because the curvy road has times where the left and right lane predictions overlap meaning that these `src` and `dst` parameters are not as parallel as I assumed. 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
