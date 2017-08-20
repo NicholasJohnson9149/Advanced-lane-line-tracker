@@ -150,16 +150,23 @@ Section of code for the sliding windows is between lines 538 to 618 on my code `
 ![alt text][image7]
 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+
 ![alt text][image8]
 ![alt text][image9]
 
+The two images show how I fit a 2nd order polynomial to the lines, the left image shows the 10 windows and their tracking of the lane lines on the wrapped image. By fitting f(y), rather than f(x), because the lane lines in the warped image are near vertical and may have the same x value for more than one y value I used `np.transpose` to cross check the curvature of the left and right lane markings to add more reliability. The ideas being that lane lines are effectively parallel so if one curve is calculated to be significantly different than the other there is an error and that calculation should be ignore. This is also where I checked that the lane markings are separated by approximately the right distance horizontally and that they are roughly parallel. 
+
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines 729 through 751 in my code in `lane_line_detection.py`. You can see how the  slide window template across the image from left to right and any overlapping values are summed together, creating the convolved signal. The peak of the convolved signal is where there was the highest overlap of pixels and the most likely position for the lane marker.
+I did this in lines 729 through 751 in my code in `lane_line_detection.py`. You can see how the  slide window  across the image from left to right and any overlapping values are summed together, creating the convolved signal. The peak of the convolved signal is where there was the highest overlap of pixels and the most likely position for the lane marker.
+
+The curve and the circle osculate touch as specific points and since the 2 curves have the same tangent and curvature at the point where they meet we can take the derivative of both the x and y coordinate to find the radius. We use the equation for a circle 
+
+The radius of curvature of the curve at a particular point is defined as the radius of the approximating circle. This radius changes as we move along the curve.
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I implemented this step in lines 855 through 1002 in my code in `lane_line_detection.py` in the function `process_image()`.  Here is an example of my result on a test image:
 
 ![alt text][image10]
 
@@ -167,7 +174,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 ### Pipeline (video)
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+#### 1. Provide a link to your final video output. Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
 Here's a [link to my video result](https://www.youtube.com/watch?v=u9cmZEouAZ4)
 
@@ -175,8 +182,8 @@ Here's a [link to my video result](https://www.youtube.com/watch?v=u9cmZEouAZ4)
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+#### 1. There are many places for improvement, mostly in the perimeters I used for the HSL transform and the calculating the radius of the curvature. I also want to add a error checking function into the pipeline to stop the lane lines from ever crossing if the calculation don't line up. The 3rd challenge video messed up my pipeline because at times the curvature of the road exceeded the algorithms ability to filter out unreasonable readings. I would also like to draw the lines on the road using the sliding window to draw onto the image when roads are more dynamic, like city streets and really windy back roads. 
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.
+I basically followed the assignment recommendations to the T and even used much of the code giving in the quizzes and examples. I used trail and error when fine tuning the HSL values for the binary image and again with the curvature calculations constants. I found the assignment was presented clearly and the examples made figuring out sections of the project strait forward that when I got stuck I would refer back to the lecture on that specific sections. The most time consuming part was getting my HSL constants to yield a good binary result without too much bur. The nest most difficult part was writing the functions and displaying the curvature on the video, I had to go back to the first assignment to see how we did it there and even Google python libraries to figure out what I was doing wrong. I finally realized my coordinates where not being defined from the correct corner of the image. 
 
-
+To continue this project I want to write it in C++ and then push it run in real time using a webcam, I think seeing how it behaves on a day to day driving well teach me more about where I can add improvements, I also like C++ better. 

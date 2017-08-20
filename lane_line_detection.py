@@ -734,7 +734,7 @@ def calc_curv_rad_and_center_dist(bin_img, l_fit, r_fit, l_lane_inds, r_lane_ind
     xm_per_pix = 3.7/378 # meters per pixel in x dimension, lane width is 12 ft = 3.7 meters
     left_curverad, right_curverad, center_dist = (0, 0, 0)
     # Define y-value where we want radius of curvature
-    # I'll choose the maximum y-value, corresponding to the bottom of the image
+    # Choose the maximum y-value, corresponding to the bottom of the image
     h = bin_img.shape[0]
     ploty = np.linspace(0, h-1, h)
     y_eval = np.max(ploty)
@@ -878,7 +878,7 @@ class Line():
                 # if there are still any fits in the queue, best_fit is their average
                 self.best_fit = np.average(self.current_fit, axis=0)
 
-############################## CLASS FOR STORING DATA  ###############################               
+############################## VIDEO IMAGE CLASS PIPELINE ###############################               
 #Define Complete Image Processing Pipeline
 def process_image(img):
     new_img = np.copy(img)
@@ -1000,6 +1000,8 @@ def plot_fit_onto_img(img, fit, plot_color):
     pts = np.array([np.transpose(np.vstack([plotx, ploty]))])
     cv2.polylines(new_img, np.int32([pts]), isClosed=False, color=plot_color, thickness=8)
     return new_img
+
+####################### LANE DETECTION on  3 VIDEOS ##############################
 
 l_line = Line()
 r_line = Line()
